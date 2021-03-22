@@ -14,17 +14,15 @@ app.post("/",function(req,res){
     
     var crypto = req.body.crypto;
     var fiat =req.body.fiat;
-    var url="https://apiv2.bitcoinaverage.com/indices/global/ticker/";
+    var firstUrl="https://api.coingecko.com/api/v3/coins/";
+    var lastUrl="?localization=false&community_data=false&developer_data=false&sparkline=false";
 
-    var finalUrl = url+crypto+fiat;
+    var finalUrl = firstUrl+crypto+lastUrl;
    
     request(finalUrl,function(err,response,body){
         var data = JSON.parse(body);
-        var price=data.last;
-        var date=data.display_timestamp;
-
-        res.write("<h1>Today's date is "+date+"</h1>");
-        res.write("<h2>The current price of "+crypto+" is "+price+" "+fiat+"</h2>");
+        var price=data.market_data.current_price[fiat];
+        res.write("<h1>Current Price of "+crypto[0].toUpperCase() + crypto.substring(1)+" is : "+price+" "+fiat.toUpperCase()+"</h1>");
         res.send();
     });
 });
